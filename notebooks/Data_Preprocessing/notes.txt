@@ -3,8 +3,7 @@ Feature engneering:
     Age of the employee at starting work in the company ❌
 
 -The most common number of years at company ✔️
--Who many years that the employee decide exit the company? ✔️
+-how many years that the employee decide exit the company? ✔️
 -What income the employees attrtion at? ✔️
 -Add Percentage to represent the stats of categories with the target ❌
 -Make interactive pie chart for job role and overtime
-
