@@ -7,3 +7,6 @@ Feature engneering:
 -What income the employees attrtion at? ✔️
 -Add Percentage to represent the stats of categories with the target ❌
 -Make interactive pie chart for job role and overtime
+
+-Handle big and abnormal ages
+-
