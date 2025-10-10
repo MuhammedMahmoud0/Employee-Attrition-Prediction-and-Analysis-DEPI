@@ -1,12 +1,11 @@
 Feature engneering:
-    Age group ❌
-    Age of the employee at starting work in the company ❌
+    Age group ✔️
+    Age of the employee at starting work in the company ✔️
 
 -The most common number of years at company ✔️
 -how many years that the employee decide exit the company? ✔️
 -What income the employees attrtion at? ✔️
 -Add Percentage to represent the stats of categories with the target ❌
--Make interactive pie chart for job role and overtime
+-Make interactive pie chart for job role and overtime✔️
 
--Handle big and abnormal ages
--
+-Handle big and abnormal ages ✔️
