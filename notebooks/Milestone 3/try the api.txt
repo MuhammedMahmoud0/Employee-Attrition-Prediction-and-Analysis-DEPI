@@ -1,0 +1,75 @@
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+
+
+
+
+
+
+
+curl -X POST "http://127.0.0.1:8000/predict" \
+-H "Content-Type: application/json" \
+-d '{
+  "employee_id": 8342,
+  "age": 30,
+  "gender": "Male",
+  "years_at_company": 6,
+  "job_role": "Media",
+  "monthly_income": 5254,
+  "work_life_balance": "Fair",
+  "job_satisfaction": "Low",
+  "performance_rating": "High",
+  "number_of_promotions": 1,
+  "overtime": "No",
+  "distance_from_home": 21,
+  "education_level": "Master’s Degree",
+  "marital_status": "Married",
+  "number_of_dependents": 2,
+  "job_level": "Mid",
+  "company_size": "Small",
+  "remote_work": "Yes",
+  "leadership_opportunities": "Yes",
+  "innovation_opportunities": "Yes",
+  "company_reputation": "Poor",
+  "employee_recognition": "Low",
+  "age_groups": "26-35",
+  "age_before_working": 24
+}'
+
+the output:
+
+{"prediction":0,"probability":0.9655169248580933}
+
+
+
+curl -X POST "http://127.0.0.1:8000/predict" \
+-H "Content-Type: application/json" \
+-d '{
+  "employee_id": 89611,
+  "age": 32,
+  "gender": "Male",
+  "years_at_company": 1,
+  "job_role": "Media",
+  "monthly_income": 2923,
+  "work_life_balance": "Excellent",
+  "job_satisfaction": "Very High",
+  "performance_rating": "Average",
+  "number_of_promotions": 0,
+  "overtime": "No",
+  "distance_from_home": 15,
+  "education_level": "High School",
+  "marital_status": "Married",
+  "number_of_dependents": 4,
+  "job_level": "Entry",
+  "company_size": "Small",
+  "remote_work": "Yes",
+  "leadership_opportunities": "No",
+  "innovation_opportunities": "Yes",
+  "company_reputation": "Excellent",
+  "employee_recognition": "Very High",
+  "age_groups": "26-35",
+  "age_before_working": 31
+}'
+
+the output:
+
+{"prediction":1,"probability":0.9880132675170898}%       
