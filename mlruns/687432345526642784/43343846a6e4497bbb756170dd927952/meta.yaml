@@ -1,0 +1,14 @@
+artifact_uri: mlflow-artifacts:/687432345526642784/43343846a6e4497bbb756170dd927952/artifacts
+end_time: 1763403691456
+entry_point_name: ''
+experiment_id: '687432345526642784'
+lifecycle_stage: active
+run_id: 43343846a6e4497bbb756170dd927952
+run_name: KNN
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763403684636
+status: 3
+tags: []
+user_id: muhammed_mahmoud

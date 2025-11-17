@@ -1,0 +1,14 @@
+artifact_uri: mlflow-artifacts:/687432345526642784/84a089a9912d47ae85c27419246c3873/artifacts
+end_time: 1763403699729
+entry_point_name: ''
+experiment_id: '687432345526642784'
+lifecycle_stage: active
+run_id: 84a089a9912d47ae85c27419246c3873
+run_name: RandomForest
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763403691528
+status: 3
+tags: []
+user_id: muhammed_mahmoud

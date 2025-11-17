@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/687432345526642784
+creation_time: 1763403667481
+experiment_id: '687432345526642784'
+last_update_time: 1763403667481
+lifecycle_stage: active
+name: classification_models

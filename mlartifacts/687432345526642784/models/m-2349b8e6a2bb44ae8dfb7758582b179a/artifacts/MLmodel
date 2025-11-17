@@ -1,0 +1,46 @@
+artifact_path: mlflow-artifacts:/687432345526642784/models/m-2349b8e6a2bb44ae8dfb7758582b179a/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.7
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+is_signature_from_type_hint: false
+mlflow_version: 3.6.0
+model_id: m-2349b8e6a2bb44ae8dfb7758582b179a
+model_size_bytes: 4651439
+model_uuid: m-2349b8e6a2bb44ae8dfb7758582b179a
+prompts: null
+run_id: b919d26d71044c1c967e1c34ffdf878d
+signature:
+  inputs: '[{"type": "long", "name": "employee_id", "required": true}, {"type": "long",
+    "name": "age", "required": true}, {"type": "string", "name": "gender", "required":
+    true}, {"type": "long", "name": "years_at_company", "required": true}, {"type":
+    "string", "name": "job_role", "required": true}, {"type": "long", "name": "monthly_income",
+    "required": true}, {"type": "string", "name": "work_life_balance", "required":
+    true}, {"type": "string", "name": "job_satisfaction", "required": true}, {"type":
+    "string", "name": "performance_rating", "required": true}, {"type": "long", "name":
+    "number_of_promotions", "required": true}, {"type": "string", "name": "overtime",
+    "required": true}, {"type": "long", "name": "distance_from_home", "required":
+    true}, {"type": "string", "name": "education_level", "required": true}, {"type":
+    "string", "name": "marital_status", "required": true}, {"type": "long", "name":
+    "number_of_dependents", "required": true}, {"type": "string", "name": "job_level",
+    "required": true}, {"type": "string", "name": "company_size", "required": true},
+    {"type": "string", "name": "remote_work", "required": true}, {"type": "string",
+    "name": "leadership_opportunities", "required": true}, {"type": "string", "name":
+    "innovation_opportunities", "required": true}, {"type": "string", "name": "company_reputation",
+    "required": true}, {"type": "string", "name": "employee_recognition", "required":
+    true}, {"type": "string", "name": "age_groups", "required": true}, {"type": "long",
+    "name": "age_before_working", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-11-17 18:21:14.019652'
