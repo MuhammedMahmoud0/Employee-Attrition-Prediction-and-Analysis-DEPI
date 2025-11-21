@@ -5,24 +5,25 @@ from dashboard import dashboard_page
 from model import model_page
 
 
-def run_app():
-    st.set_page_config(
-        page_title="HR Attrition Predictor",
-        page_icon="💼",
-        layout="wide",
-        initial_sidebar_state="expanded"
-    )
+# MUST be the first Streamlit command - call it before importing page functions
+st.set_page_config(
+    page_title="HR Attrition Predictor",
+    page_icon="💼",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-    pages = [
-        st.Page(home_page, icon="🏠", title="Home"),
-        st.Page(visualization_page, icon="📈", title="Visualization"),
-        st.Page(dashboard_page, icon="📊", title="Dashboard (External)"),
-        st.Page(model_page, icon="💻", title="Prediction Model"),
-    ]
-
-    pg = st.navigation(pages)
-    pg.run()
+# Now import page functions after set_page_config
 
 
-if __name__ == '__main__':
-    run_app()
+# Simple sidebar navigation
+pages = {
+    "Home": home_page,
+    "Visualization": visualization_page,
+    "Dashboard (External)": dashboard_page,
+    "Prediction Model": model_page,
+}
+
+choice = st.sidebar.radio("Navigate", list(pages.keys()), index=0)
+# Call the selected page function
+pages[choice]()
