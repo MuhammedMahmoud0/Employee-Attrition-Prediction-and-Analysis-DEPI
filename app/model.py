@@ -5,7 +5,7 @@ import pickle
 import os
 
 # Load the pre-trained model
-MODEL_PATH = "D:\FCDS\DEPI\\final project\Employee-Attrition-Prediction-and-Analysis-DEPI-main\models\model.pkl"
+MODEL_PATH = "..\models\model.pkl"
 
 @st.cache_resource
 def load_model():
