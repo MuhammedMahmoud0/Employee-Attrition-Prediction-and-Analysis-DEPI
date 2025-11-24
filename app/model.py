@@ -1,22 +1,20 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import pickle
-import os
+import requests
+import json
 
-# Load the pre-trained model
-MODEL_PATH = "..\models\model.pkl"
+# FastAPI server URL
+API_URL = "http://127.0.0.1:8000"
 
 @st.cache_resource
-def load_model():
-    """Load the pre-trained pickle model."""
-    if os.path.exists(MODEL_PATH):
-        with open(MODEL_PATH, 'rb') as f:
-            model = pickle.load(f)
-        return model
-    else:
-        st.error(f"Model file not found at {MODEL_PATH}")
-        return None
+def check_api_health():
+    """Check if FastAPI server is running."""
+    try:
+        response = requests.get(f"{API_URL}/health", timeout=5)
+        return response.status_code == 200
+    except:
+        return False
 
 # Helper to calculate derived features
 def calculate_age_group(age: int) -> str:
@@ -33,17 +31,17 @@ def calculate_age_group(age: int) -> str:
         return "56-65"
 
 def model_page():
-    """Prediction Model page with direct pickle model inference."""
+    """Prediction Model page with FastAPI inference."""
     st.title("Prediction Model 💻")
     st.markdown("---")
 
     st.header("Predict Employee Attrition Risk")
     st.write("1 = Stayed | 0 = Left")
 
-    # Load model
-    model = load_model()
-    if model is None:
-        st.error("Failed to load the prediction model. Please check the model file path.")
+    # Check if FastAPI server is running
+    if not check_api_health():
+        st.error("⚠️ FastAPI server is not running!")
+        st.info("Please run the FastAPI server first using the terminal command provided in the instructions.")
         return
 
     st.subheader("Predict for a Single Employee")
@@ -121,27 +119,50 @@ def model_page():
                 'age_before_working': age_before_working
             }
             
-            # Convert to DataFrame (model expects DataFrame input)
-            input_df = pd.DataFrame([payload])
+            # Send request to FastAPI server
+            response = requests.post(
+                f"{API_URL}/predict",
+                json=payload,
+                timeout=10
+            )
             
-            # Make prediction
-            prediction = model.predict(input_df)[0]
-            prediction_proba = model.predict_proba(input_df)[0]
-            
-            # Map prediction to label (1 = Stayed, 0 = Left)
-            result_label = "Stayed ✅" if prediction == 1 else "Left ⚠️"
-            confidence = max(prediction_proba) * 100
-            
-            st.markdown("#### Prediction Result:")
-            
-            if prediction == 1:
-                st.success(f"**{result_label}** ({confidence:.1f}% confidence)")
-                st.write("This employee is predicted to stay with the company.")
+            if response.status_code == 200:
+                result = response.json()
+                prediction = result['prediction']
+                confidence = result['confidence']
+                prediction_label = result['prediction_label']
+                
+                # Map prediction to label (1 = Stayed, 0 = Left)
+                result_label = "Stayed ✅" if prediction == 1 else "Left ⚠️"
+                
+                st.markdown("#### Prediction Result:")
+                
+                if prediction == 1:
+                    st.success(f"**{result_label}** ({confidence:.1f}% confidence)")
+                    st.write("This employee is predicted to stay with the company.")
+                else:
+                    st.error(f"**{result_label}** ({confidence:.1f}% confidence)")
+                    st.write("This employee exhibits characteristics associated with attrition risk.")
+                
+                # Show additional details
+                st.markdown("---")
+                st.subheader("Prediction Details")
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Prediction", prediction_label)
+                with col2:
+                    st.metric("Confidence", f"{confidence:.1f}%")
+                with col3:
+                    st.metric("Employee ID", employee_id)
             else:
-                st.error(f"**{result_label}** ({confidence:.1f}% confidence)")
-                st.write("This employee exhibits characteristics associated with attrition risk.")
+                st.error(f"API Error: {response.status_code}")
+                st.write(response.text)
         
+        except requests.exceptions.ConnectionError:
+            st.error("❌ Cannot connect to FastAPI server")
+            st.info("Make sure the FastAPI server is running on http://127.0.0.1:8000")
+        except requests.exceptions.Timeout:
+            st.error("⏱️ Request timed out")
         except Exception as e:
             st.error(f"Prediction failed: {str(e)}")
-            st.write("Please ensure the model file exists and all inputs are valid.")
 

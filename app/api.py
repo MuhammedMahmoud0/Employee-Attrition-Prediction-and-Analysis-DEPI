@@ -1,103 +1,105 @@
-import streamlit as st
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import pandas as pd
-import numpy as np
-import io
-import requests
+import pickle
+import os
+import uvicorn
+# uvicorn api:app --reload --host 127.0.0.1 --port 8000
+app = FastAPI(title="Attrition Prediction API")
 
-# Define the URL for the external FastAPI prediction service
-API_URL = "http://127.0.0.1:8000/predict"
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
-# The full list of 24 features required by the external API service
-REQUIRED_FEATURES = [
-    'employee_id', 'age', 'gender', 'years_at_company', 'job_role', 
-    'monthly_income', 'work_life_balance', 'job_satisfaction', 
-    'performance_rating', 'number_of_promotions', 'overtime', 
-    'distance_from_home', 'education_level', 'marital_status', 
-    'number_of_dependents', 'job_level', 'company_size', 'remote_work', 
-    'leadership_opportunities', 'innovation_opportunities', 
-    'company_reputation', 'employee_recognition', 'age_groups', 
-    'age_before_working'
-]
+# Global model variable
+model = None
 
+class PredictionRequest(BaseModel):
+    employee_id: int
+    age: int
+    gender: str
+    years_at_company: int
+    job_role: str
+    monthly_income: float
+    work_life_balance: str
+    job_satisfaction: str
+    performance_rating: str
+    number_of_promotions: int
+    overtime: str
+    distance_from_home: int
+    education_level: str
+    marital_status: str
+    number_of_dependents: int
+    job_level: str
+    company_size: str
+    remote_work: str
+    leadership_opportunities: str
+    innovation_opportunities: str
+    company_reputation: str
+    employee_recognition: str
+    age_groups: str
+    age_before_working: int
 
-def call_predict(payload: dict) -> dict:
-    """
-    Sends a single payload dict to the FastAPI `/predict` endpoint.
-
-    - Validates that all required features are present and not null.
-    - Raises RuntimeError if the FastAPI server is unreachable.
-    - Uses `st.error(...)` and raises RuntimeError if response.status_code != 200.
-
-    Returns the parsed JSON response as a dict.
-    """
-    # Validate payload keys
-    missing = [k for k in REQUIRED_FEATURES if k not in payload]
-    if missing:
-        raise ValueError(f"Missing required features in payload: {', '.join(missing)}")
-
-    # Ensure no NaN/None values
-    nan_keys = [k for k, v in payload.items() if pd.isna(v)]
-    if nan_keys:
-        raise ValueError(f"Payload contains null values for: {', '.join(nan_keys)}")
-
-    try:
-        response = requests.post(API_URL, json=payload, timeout=10)
-    except requests.exceptions.RequestException:
-        # Fatal: do not simulate
-        raise RuntimeError("FastAPI model server unreachable. Please start the backend.")
-
-    if response.status_code != 200:
-        # Show the error then raise to stop execution as requested
-        body = response.text or ''
-        st.error("Prediction failed: " + body)
-        raise RuntimeError(f"Prediction request failed with status {response.status_code}: {body}")
-
-    # Parse JSON and return
-    result = response.json()
-    return result
+class PredictionResponse(BaseModel):
+    prediction: int
+    prediction_label: str
+    confidence: float
+    probability_stayed: float
+    probability_left: float
 
 
-@st.cache_data
-def generate_mock_data():
-    data = {
-        'Age': np.random.randint(22, 60, 200),
-        'Gender': np.random.choice(['Male', 'Female'], 200, p=[0.6, 0.4]),
-        'MonthlyIncome': np.random.normal(6500, 3000, 200).round(2),
-        'JobSatisfaction': np.random.randint(1, 5, 200),
-        'YearsAtCompany': np.random.randint(1, 15, 200),
-        'Attrition': np.random.choice(['Stayed', 'Left'], 200, p=[0.8, 0.2])
-    }
-    df = pd.DataFrame(data)
-    df['MonthlyIncome'] = np.where(df['MonthlyIncome'] < 1500, 1500, df['MonthlyIncome'])
-
-    df['attrition'] = df['Attrition'].map({'Stayed': 0, 'Left': 1})
-    df['years_at_company'] = df['YearsAtCompany']
-    df['age_groups'] = pd.cut(df['Age'], bins=[18, 25, 35, 45, 55, 65], labels=["18-25", "26-35", "36-45", "46-55", "56-65"], right=False).astype(str)
-    df['overtime'] = np.random.choice(['Yes', 'No'], 200, p=[0.3, 0.7])
-    df['job_role'] = np.random.choice(["Education", "Technology", "Media", "Healthcare", "Finance"], 200)
-
-    return df
-
-
-@st.cache_data
-def get_sample_csv_for_download():
-    """
-    Returns a small CSV template (optional) for users who want to see required columns.
-    This is separate from the prediction-download feature which exports actual predictions.
-    """
-    # Provide a minimal template with headers matching REQUIRED_FEATURES
-    df = pd.DataFrame(columns=REQUIRED_FEATURES)
-    return df.to_csv(index=False).encode('utf-8')
-
-
-def calculate_age_group(age):
-    if age < 26:
-        return "18-25"
-    elif age < 36:
-        return "26-35"
-    elif age < 46:
-        return "36-45"
-    elif age < 56:
-        return "46-55"
+def load_model():
+    global model
+    model_path = os.path.join(os.path.dirname(__file__), "..", "models", "model.pkl")
+    if os.path.exists(model_path):
+        with open(model_path, 'rb') as f:
+            model = pickle.load(f)
+        print(f"✓ Model loaded from {model_path}")
+        return model
     else:
-        return "56-65"
+        raise FileNotFoundError(f"Model not found at {model_path}")
+
+# Run this function automatically when the server starts.
+@app.on_event("startup")
+async def startup_event():
+    try:
+        load_model()
+        print("✓ FastAPI server started")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        raise
+
+#Defines the home route of the API.
+@app.get("/")
+async def root():
+    return {"status": "online", "model_loaded": model is not None}
+#Used to check the health of the API & Ensures API only runs when the ML model is ready.
+@app.get("/health")
+async def health_check():
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded")
+    return {"status": "healthy"}
+
+
+@app.post("/predict", response_model=PredictionResponse)
+async def predict(request: PredictionRequest) -> PredictionResponse:
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded")
+    try:
+        input_df = pd.DataFrame([request.dict()])
+        prediction = model.predict(input_df)[0]
+        prediction_proba = model.predict_proba(input_df)[0]
+        prediction_label = "Stayed" if prediction == 1 else "Left"
+        confidence = max(prediction_proba) * 100
+        return PredictionResponse(
+            prediction=int(prediction),
+            prediction_label=prediction_label,
+            confidence=confidence,
+            probability_stayed=float(prediction_proba[1]) * 100 if len(prediction_proba) > 1 else 0,
+            probability_left=float(prediction_proba[0]) * 100 if len(prediction_proba) > 0 else 0
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Prediction failed: {str(e)}")
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
