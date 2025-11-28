@@ -1,0 +1,32 @@
+services:
+    api:
+        build:
+            context: .
+            dockerfile: backend.Dockerfile
+            # Use cache_from if you tag images locally to speed rebuilds
+            cache_from: []
+        container_name: fastapi_service
+        ports:
+            - "8000:8000"
+        restart: always
+        volumes:
+            - ./models:/app/models
+
+    frontend:
+        build:
+            context: .
+            dockerfile: frontend.Dockerfile
+            cache_from: []
+        container_name: streamlit_app
+        ports:
+            - "8501:8501"
+        restart: always
+        depends_on:
+            - api
+        environment:
+            API_URL: "http://api:8000"
+
+# Named volume for pip cache if you want to persist cache between builds (optional)
+volumes:
+    pip-cache:
+        driver: local
