@@ -4,7 +4,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-
+import os
 
 def visualization_page():
     """Visualization page content."""
@@ -13,7 +13,9 @@ def visualization_page():
     
     try:
         # Read the data
-        path = "../data/Faker_Data/Preprocessed_Data/preprocessed_data.csv"
+        base = os.path.dirname(__file__)
+        path = os.path.join(base, "..", "data", "Faker_Data", "Preprocessed_Data", "preprocessed_data.csv")
+        path = os.path.abspath(path)
         df = pd.read_csv(path)
         
         # Attrition Distribution
@@ -25,7 +27,8 @@ def visualization_page():
         st.header("Attrition Rate by Years at Company")
         attr_rate_by_years = plt.figure(figsize=(10, 5))
         try:
-            df_attr = pd.read_csv("df_attr.csv")
+            df_attr_path = os.path.join(base, "df_attr.csv")
+            df_attr = pd.read_csv(df_attr_path)
             sns.lineplot(x="years_at_company", y="attrition_rate", data=df_attr, marker='o')
             plt.title("Attrition Rate by Years at Company")
             st.pyplot(attr_rate_by_years)

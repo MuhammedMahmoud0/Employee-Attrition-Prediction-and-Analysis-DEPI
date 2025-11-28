@@ -33,7 +33,7 @@ def calculate_age_group(age: int) -> str:
     elif age < 56:
         return "46-55"
     else:
-        return "56-65"
+        return "55+"
 
 
 def model_page():

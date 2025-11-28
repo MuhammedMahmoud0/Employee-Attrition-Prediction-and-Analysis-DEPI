@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+import os
 
 def home_page():
     """Home page content."""
@@ -12,7 +12,10 @@ def home_page():
 
     st.header("Data", divider="gray")
     try:
-        df = pd.read_csv("../data/Faker_Data/synthetic_hr_dataset.csv")
+        base = os.path.dirname(__file__)
+        path = os.path.join(base, "..", "data", "Faker_Data", "synthetic_hr_dataset.csv")
+        path = os.path.abspath(path)
+        df = pd.read_csv(path)
         st.dataframe(df)
     except FileNotFoundError:
         st.warning("Data file not found. Please ensure synthetic_hr_dataset.csv exists.")
