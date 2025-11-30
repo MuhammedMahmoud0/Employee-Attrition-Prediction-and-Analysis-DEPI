@@ -144,11 +144,6 @@ curl -X POST "http://localhost:5000/predict" \
 
 ## 🖼️ Screenshots / Demo
 
-Add your visual assets to `assets/` or `docs/images/` and reference them here.
-
--   Dashboard overview
-    Below is a compact gallery — images are scaled for a clean, consistent layout. Add high-res versions to `assets/` and replace the placeholders.
-
 <div align="center">
 	<table>
 		<tr>
