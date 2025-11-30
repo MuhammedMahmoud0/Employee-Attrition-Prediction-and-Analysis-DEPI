@@ -219,21 +219,9 @@ We automatically extracted contributors from the repository commit history and r
 			<a href="mailto:ahmedemad7710@gmail.com">ahmedemad7710@gmail.com</a></p>
 		</td>
 	</tr>
-	<tr>
-		<td colspan="4" align="center">
-			<small>If any avatar or link looks incorrect, provide the correct GitHub username or LinkedIn URL and I will update this section.</small>
-		</td>
-	</tr>
 </table>
 
 </div>
-
-Notes:
-
--   The GitHub profiles and avatar URLs were resolved automatically using the GitHub public API for usernames inferred from commits. If you prefer I can also attempt to resolve LinkedIn profiles or add short bios.
--   If you want me to include clickable social badges (LinkedIn, Twitter) or reorder contributors by role, say which layout you prefer and I'll update accordingly.
-
----
 
 ## 🧪 Tests
 
