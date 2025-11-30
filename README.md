@@ -147,15 +147,34 @@ curl -X POST "http://localhost:5000/predict" \
 Add your visual assets to `assets/` or `docs/images/` and reference them here.
 
 -   Dashboard overview
-    ![Dashboard placeholder](./assets/screenshot-dashboard.png)
+    Below is a compact gallery — images are scaled for a clean, consistent layout. Add high-res versions to `assets/` and replace the placeholders.
 
--   Prediction response
-    ![Prediction placeholder](./assets/screenshot-predict.png)
-
--   Demo GIF
-    ![Demo GIF placeholder](./assets/demo.gif)
-
-Replace the placeholders above with real screenshots or GIFs before publishing.
+<div align="center">
+	<table>
+		<tr>
+			<td align="center" style="padding:8px">
+				<figure>
+					<img src="./assets/screenshot-dashboard1.png" alt="Dashboard 1" style="width:320px;max-width:45vw;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.08);" />
+					<figcaption style="font-size:12px;margin-top:6px;color:#444">Dashboard — Overview</figcaption>
+				</figure>
+			</td>
+			<td align="center" style="padding:8px">
+				<figure>
+					<img src="./assets/screenshot-dashboard2.png" alt="Dashboard 2" style="width:320px;max-width:45vw;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.08);" />
+					<figcaption style="font-size:12px;margin-top:6px;color:#444">Dashboard — Filters & Charts</figcaption>
+				</figure>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center" style="padding:8px">
+				<figure>
+					<img src="./assets/prediction.png" alt="Prediction response" style="width:560px;max-width:90vw;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.08);" />
+					<figcaption style="font-size:12px;margin-top:6px;color:#444">Sample prediction response</figcaption>
+				</figure>
+			</td>
+		</tr>
+	</table>
+</div>
 
 ---
 
@@ -189,8 +208,6 @@ Please open issues for bugs or feature requests and tag them appropriately.
 ---
 
 ## 👥 Collaborators
-
-We automatically extracted contributors from the repository commit history and resolved their GitHub profiles and avatar images.
 
 <div align="center">
 
@@ -246,18 +263,9 @@ Consider adding GitHub Actions for CI to run tests and linting automatically.
 
 ---
 
-## 📜 License
-
-This project is provided under the MIT License. See the `LICENSE` file for details.
-
----
-
 ## 🙏 Acknowledgements
 
 -   Datasets from Kaggle and synthetic generators
 -   Project structure inspired by common ML deployment best practices
 
 ---
-
-If you'd like any edits (different tone, add a contributors list, change badges or example endpoints), tell me which sections to tweak and I'll update the file.
-DEPI Project
